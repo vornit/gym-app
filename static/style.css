@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+nav {
+    background-color: #007bff;
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    margin: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.tab-content {
+    display: none;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Reduce the gap between elements */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between label and input boxes */
+}
+
+label {
+    margin-top: 0;
+    font-weight: bold;
+    width: 60px; /* Ensure labels are aligned */
+}
+
+input[type="text"].square-input {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 60px; /* Make the input box square */
+    height: 60px; /* Make the input box square */
+    text-align: center; /* Center the text */
+}
+
+button.save-workout {
+    padding: 5px 10px; /* Smaller button */
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    align-self: flex-start; /* Align button to the start (left edge) */
+}
+
+button.save-workout:hover {
+    background-color: #0056b3;
+}
+
+.exercise-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; /* Reduce the bottom margin */
+}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Add Workout</h1>
+<form id="workoutForm">
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required>
+    <label for="bench">Bench</label>
+    <div class="exercise-row">
+        <input type="number" name="bench_set1" min="1" required>
+        <input type="number" name="bench_set2" min="1" required>
+        <input type="number" name="bench_set3" min="1" required>
+    </div>
+    <label for="squat">Squat</label>
+    <div class="exercise-row">
+        <input type="number" name="squat_set1" min="1" required>
+        <input type="number" name="squat_set2" min="1" required>
+        <input type="number" name="squat_set3" min="1" required>
+    </div>
+    <button type="submit">Save Workout</button>
+</form>
+{% endblock %}

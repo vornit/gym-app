@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Workout History</h1>
+<div class="workout-container">
+    {% for workout in workouts %}
+    {% if loop.index0 is divisibleby 2 %}
+    <div class="workout-group">
+    {% endif %}
+        <div class="workout-row">
+            {% set date, time = workout[0].split('T') %}
+            {% set formatted_time = time.split('.')[0] %}
+            <div class="row-content">
+                <span>{{ date }}</span>
+                <span>{{ formatted_time }}</span>
+                <span>{{ workout[1] }}</span>
+                <span>{{ workout[2] }}</span>
+                <span>{{ workout[3] }}</span>
+                <span>{{ workout[4] }}</span>
+            </div>
+        </div>
+    {% if loop.index0 is divisibleby 2 %}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
