@@ -7,16 +7,20 @@ def init_db():
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
         cursor.execute('''
-            DROP TABLE IF EXISTS workouts
+            CREATE TABLE IF NOT EXISTS workout_sessions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT NOT NULL
+            )
         ''')
         cursor.execute('''
-            CREATE TABLE workouts (
+            CREATE TABLE IF NOT EXISTS workouts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp TEXT NOT NULL,
+                session_id INTEGER NOT NULL,
                 exercise TEXT NOT NULL,
                 set1 INTEGER NOT NULL,
                 set2 INTEGER NOT NULL,
-                set3 INTEGER NOT NULL
+                set3 INTEGER NOT NULL,
+                FOREIGN KEY (session_id) REFERENCES workout_sessions(id)
             )
         ''')
         conn.commit()
@@ -29,7 +33,12 @@ def index():
 def history():
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT timestamp, exercise, set1, set2, set3 FROM workouts')
+        cursor.execute('''
+            SELECT s.timestamp, w.exercise, w.set1, w.set2, w.set3
+            FROM workout_sessions s
+            JOIN workouts w ON s.id = w.session_id
+            ORDER BY s.timestamp
+        ''')
         workouts = cursor.fetchall()
     return render_template('history.html', workouts=workouts)
 
@@ -48,11 +57,15 @@ def add_workout():
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO workouts (timestamp, exercise, set1, set2, set3) VALUES
+            INSERT INTO workout_sessions (timestamp) VALUES (?)
+        ''', (timestamp,))
+        session_id = cursor.lastrowid
+        cursor.execute('''
+            INSERT INTO workouts (session_id, exercise, set1, set2, set3) VALUES
             (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)
         ''', (
-            timestamp, 'Bench', workout_data['bench_set1'], workout_data['bench_set2'], workout_data['bench_set3'],
-            timestamp, 'Squat', workout_data['squat_set1'], workout_data['squat_set2'], workout_data['squat_set3']
+            session_id, 'Bench', workout_data['bench_set1'], workout_data['bench_set2'], workout_data['bench_set3'],
+            session_id, 'Squat', workout_data['squat_set1'], workout_data['squat_set2'], workout_data['squat_set3']
         ))
         conn.commit()
     return jsonify({'status': 'success'})
@@ -61,7 +74,12 @@ def add_workout():
 def get_workouts():
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT timestamp, exercise, set1, set2, set3 FROM workouts')
+        cursor.execute('''
+            SELECT s.timestamp, w.exercise, w.set1, w.set2, w.set3
+            FROM workout_sessions s
+            JOIN workouts w ON s.id = w.session_id
+            ORDER BY s.timestamp
+        ''')
         workouts = cursor.fetchall()
     return jsonify([{
         'timestamp': workout[0],
@@ -72,5 +90,5 @@ def get_workouts():
     } for workout in workouts])
 
 if __name__ == '__main__':
-    init_db()  # Reinitialize the database to ensure the schema is correct
+    init_db()  # Initialize the database if it does not exist
     app.run(debug=True)
